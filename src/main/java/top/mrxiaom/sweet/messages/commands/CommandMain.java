@@ -24,6 +24,8 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     public CommandMain(SweetMessages plugin) {
         super(plugin);
         registerCommand("sweetmessages", this);
+        listOpArg0.addAll(argMessage);
+        listOpArg0.addAll(argAction);
     }
 
     /**
@@ -32,7 +34,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
      */
     @SuppressWarnings("IfCanBeSwitch")
     public List<CommandSender> parseReceivers(CommandSender sender, String s) {
-        if (s.equals("@a")) { // 所有在线玩家
+        if (s.equals("@a") || s.equals("@e")) { // 所有在线玩家
             List<CommandSender> receivers = new ArrayList<>();
             receivers.add(Bukkit.getConsoleSender()); // 为了后台也能收到，把它也加进去，留个底
             receivers.addAll(Bukkit.getOnlinePlayers());
@@ -133,15 +135,40 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     }
 
     private static final List<String> emptyList = Lists.newArrayList();
-    private static final List<String> listArg0 = Lists.newArrayList(
-            "hello");
-    private static final List<String> listOpArg0 = Lists.newArrayList(
-            "hello", "reload");
+    private static final List<String> listOpArg0 = new ArrayList<>();
+    private static final List<String> listTargetArg1 = Lists.newArrayList("@a", "@e", "@s", "@p", "@r");
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) {
-            return startsWith(sender.isOp() ? listOpArg0 : listArg0, args[0]);
+        if (sender.isOp()) {
+            if (args.length == 1) {
+                return startsWith(listOpArg0, args[0]);
+            }
+            if (args.length == 2) {
+                String arg0 = args[0].toLowerCase();
+                if (argMessage.contains(arg0) || argAction.contains(arg0)) {
+                    if (args[1].startsWith("@")) {
+                        return startsWith(listTargetArg1, args[1]);
+                    }
+                    if (!args[1].contains(",")) {
+                        List<String> list = new ArrayList<>(listTargetArg1);
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            list.add(player.getName());
+                        }
+                        return startsWith(list, args[1]);
+                    }
+                    String prefix = args[1].substring(0, args[1].lastIndexOf(',') + 1);
+                    String input = args[1].substring(prefix.length()).toLowerCase();
+                    List<String> list = new ArrayList<>();
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        String name = player.getName();
+                        if (name.toLowerCase().startsWith(input)) {
+                            list.add(prefix + name);
+                        }
+                    }
+                    return list;
+                }
+            }
         }
         return emptyList;
     }
