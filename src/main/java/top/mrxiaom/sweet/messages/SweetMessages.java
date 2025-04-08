@@ -1,8 +1,6 @@
 package top.mrxiaom.sweet.messages;
         
-import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.EconomyHolder;
 
 public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
@@ -16,6 +14,7 @@ public class SweetMessages extends BukkitPlugin {
                 .database(false)
                 .reconnectDatabaseWhenReloadConfig(false)
                 .vaultEconomy(false)
+                .disableDefaultConfig(true)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
     }
