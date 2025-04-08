@@ -1,0 +1,11 @@
+name: SweetMessages
+version: '${version}'
+main: top.mrxiaom.sweet.messages.SweetMessages
+api-version: 1.13
+depend: [  ]
+softdepend: [ PlaceholderAPI ]
+authors: [ MrXiaoM ]
+commands:
+  sweetmessages:
+    description: 'The main command of SweetMessages'
+    aliases: [ smsgs, smsg ]
