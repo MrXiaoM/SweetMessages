@@ -3,3 +3,10 @@ title-default:
   fade-in: 10
   stay: 40
   fade-out: 10
+# 标题预设时间，在标题前使用 --time=名字 或 -t=名字 来使用
+title-times:
+  # 举例: /smsgs title -t=example 测试\n预设时间
+  example:
+    fade-in: 0
+    stay: 60
+    fade-out: 0

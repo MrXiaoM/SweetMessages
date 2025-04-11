@@ -44,7 +44,12 @@ public class TitleArguments implements IArguments {
                 if (split.length >= 2) stay = Util.parseInt(split[1]).orElse(stay);
                 if (split.length >= 3) fadeOut = Util.parseInt(split[2]).orElse(fadeOut);
             } else {
-                // TODO: 从 TitlePresetManager 获取预设时间
+                TitlePresetManager.Preset preset = manager.getTimePreset(time);
+                if (preset != null) {
+                    fadeIn = preset.fadeIn;
+                    stay = preset.stay;
+                    fadeOut = preset.fadeOut;
+                }
             }
         }
         fadeIn = Util.parseInt(get(arguments, "-i", "--fadeIn", "--fade-in", "--fade_in")).orElse(fadeIn);
