@@ -2,6 +2,8 @@
 
 消息相关的基础命令插件。支持 [MiniMessage格式](https://docs.advntr.dev/minimessage/format.html) 以及 PAPI 变量
 
+PAPI 变量默认不替换，自行在命令选项添加 `-p=true` 来替换变量。
+
 根命令为 `/sweetmessages`，别名为 `/smsgs` 或 `/smsg`  
 使用类 Linux 系统的命令格式。
 
@@ -72,7 +74,7 @@
                                                      单位为tick，使用英文逗号分隔三个数值
                                                      或者使用配置文件中预设的值
   -i,--fade-in,--fadeIn,--fade_in=<时间>             设置标题消息的淡入时间，单位为tick
-  -s,--stay=<时间>                                   设置标题消息的淡入时间，单位为tick
+  -s,--stay=<时间>                                   设置标题消息的保持时间，单位为tick
   -o,--fade-out,--fadeOut,--fade_out=<时间>          设置标题消息的淡出时间，单位为tick
 
 标题文字:
