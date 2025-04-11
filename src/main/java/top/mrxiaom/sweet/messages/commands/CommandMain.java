@@ -16,6 +16,7 @@ import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
+import top.mrxiaom.sweet.messages.commands.args.TitleArguments;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         registerCommand("sweetmessages", this);
         listOpArg0.addAll(argMessage);
         listOpArg0.addAll(argAction);
+        listOpArg0.addAll(argTitle);
     }
 
     /**
@@ -86,6 +88,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
 
     List<String> argMessage = Lists.newArrayList("message", "msg", "m");
     List<String> argAction = Lists.newArrayList("actionbar", "action", "a");
+    List<String> argTitle = Lists.newArrayList("title", "t");
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.isOp()) {
@@ -96,6 +99,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
+                if (arguments == null) {
+                    return t(sender, "&e请输入消息内容");
+                }
                 Runnable execute = () -> {
                     for (CommandSender receiver : receivers) {
                         for (String line : arguments.lines) {
@@ -116,11 +122,42 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
+                if (arguments == null) {
+                    return t(sender, "&e请输入消息内容");
+                }
                 Runnable execute = () -> {
                     String message = arguments.lines.get(0);
                     for (CommandSender receiver : receivers) {
                         if (receiver instanceof Player) {
                             AdventureUtil.sendActionBar((Player) receiver, message);
+                        }
+                    }
+                };
+                if (arguments.delay > 0)  {
+                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                } else {
+                    execute.run();
+                }
+                return true;
+            }
+            if (args.length >= 2 && argTitle.contains(arg0)) {
+                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                if (receivers == null) {
+                    return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
+                }
+                TitleArguments arguments = parse(TitleArguments::parser, args, 2);
+                if (arguments == null) {
+                    return t(sender, "&e请输入标题内容");
+                }
+                Runnable execute = () -> {
+                    String title = arguments.title;
+                    String subTitle = arguments.subTitle;
+                    int fadeIn = arguments.fadeIn;
+                    int stay = arguments.stay;
+                    int fadeOut = arguments.fadeOut;
+                    for (CommandSender receiver : receivers) {
+                        if (receiver instanceof Player) {
+                            AdventureUtil.sendTitle((Player) receiver, title, subTitle, fadeIn, stay, fadeOut);
                         }
                     }
                 };
@@ -151,7 +188,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             if (args.length == 2) {
                 String arg0 = args[0].toLowerCase();
-                if (argMessage.contains(arg0) || argAction.contains(arg0)) {
+                if (argMessage.contains(arg0) || argAction.contains(arg0) || argTitle.contains(arg0)) {
                     if (args[1].startsWith("@")) {
                         return startsWith(listTargetArg1, args[1]);
                     }

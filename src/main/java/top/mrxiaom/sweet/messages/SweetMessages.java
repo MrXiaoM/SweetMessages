@@ -14,7 +14,6 @@ public class SweetMessages extends BukkitPlugin {
                 .database(false)
                 .reconnectDatabaseWhenReloadConfig(false)
                 .vaultEconomy(false)
-                .disableDefaultConfig(true)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
     }

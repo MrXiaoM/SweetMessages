@@ -19,6 +19,9 @@ public interface IArguments {
             } else break;
         }
         String last = consumeString(args, i);
+        if (last.trim().isEmpty()) {
+            return null;
+        }
         return parser.parse(arguments, last);
     }
     static String consumeString(String[] args, int startIndex) {

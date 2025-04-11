@@ -1,0 +1,5 @@
+# 默认标题时间
+title-default:
+  fade-in: 10
+  stay: 40
+  fade-out: 10
