@@ -24,7 +24,7 @@ public class TitleArguments implements IArguments {
     }
 
     public static TitleArguments parser(Map<String, String> arguments, String last) {
-        String papiStr = get(arguments, "-papi", "--papi", "--placeholder", "--placeholders");
+        String papiStr = get(arguments, "-p", "--papi", "--placeholder", "--placeholders");
         boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
         long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
         String title, subTitle;

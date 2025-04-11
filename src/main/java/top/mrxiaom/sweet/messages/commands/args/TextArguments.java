@@ -20,7 +20,7 @@ public class TextArguments implements IArguments {
     }
 
     public static TextArguments parser(Map<String, String> arguments, String last) {
-        String papiStr = get(arguments, "-papi", "--papi", "--placeholder", "--placeholders");
+        String papiStr = get(arguments, "-p", "--papi", "--placeholder", "--placeholders");
         boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
         Long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
         List<String> lines = last.contains("\\n")
