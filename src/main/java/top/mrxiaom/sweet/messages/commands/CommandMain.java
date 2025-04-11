@@ -75,6 +75,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             int index = new Random().nextInt(list.size());
             return Lists.newArrayList(list.get(index));
         }
+        if (s.startsWith("@")) { // 其它选择器均不支持
+            return null;
+        }
         if (s.contains(",")) { // 多个玩家
             String[] split = s.split(",");
             List<Player> players = Util.getOnlinePlayersByName(Arrays.asList(split));
