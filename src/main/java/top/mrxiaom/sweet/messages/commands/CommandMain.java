@@ -15,9 +15,12 @@ import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
+import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
 
 import java.util.*;
+
+import static top.mrxiaom.sweet.messages.commands.args.IArguments.parse;
 
 @AutoRegister
 public class CommandMain extends AbstractModule implements CommandExecutor, TabCompleter, Listener {
@@ -92,14 +95,18 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (receivers == null) {
                     return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
                 }
-                String message = consumeString(args, 2);
-                String[] lines = message.contains("\\n")
-                        ? message.split("\\n")
-                        : new String[] { message };
-                for (CommandSender receiver : receivers) {
-                    for (String line : lines) {
-                        AdventureUtil.sendMessage(receiver, line);
+                TextArguments arguments = parse(TextArguments::parser, args, 2);
+                Runnable execute = () -> {
+                    for (CommandSender receiver : receivers) {
+                        for (String line : arguments.lines) {
+                            AdventureUtil.sendMessage(receiver, line);
+                        }
                     }
+                };
+                if (arguments.delay > 0)  {
+                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                } else {
+                    execute.run();
                 }
                 return true;
             }
@@ -108,11 +115,19 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (receivers == null) {
                     return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
                 }
-                String message = consumeString(args, 2);
-                for (CommandSender receiver : receivers) {
-                    if (receiver instanceof Player) {
-                        AdventureUtil.sendActionBar((Player) receiver, message);
+                TextArguments arguments = parse(TextArguments::parser, args, 2);
+                Runnable execute = () -> {
+                    String message = arguments.lines.get(0);
+                    for (CommandSender receiver : receivers) {
+                        if (receiver instanceof Player) {
+                            AdventureUtil.sendActionBar((Player) receiver, message);
+                        }
                     }
+                };
+                if (arguments.delay > 0)  {
+                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                } else {
+                    execute.run();
                 }
                 return true;
             }
@@ -122,16 +137,6 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
         }
         return true;
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private static String consumeString(String[] args, int startIndex) {
-        if (startIndex >= args.length) return "";
-        StringBuilder sb = new StringBuilder(args[startIndex]);
-        for (int i = startIndex + 1; i < args.length; i++) {
-            sb.append(" ").append(args[i]);
-        }
-        return sb.toString();
     }
 
     private static final List<String> emptyList = Lists.newArrayList();
