@@ -8,11 +8,13 @@ import java.util.Map;
 import static top.mrxiaom.sweet.messages.commands.args.IArguments.get;
 
 public class TitleArguments implements IArguments {
+    public final boolean papi;
     public final long delay;
     public final int fadeIn, stay, fadeOut;
     public final String title, subTitle;
 
-    public TitleArguments(long delay, int fadeIn, int stay, int fadeOut, String title, String subTitle) {
+    public TitleArguments(boolean papi, long delay, int fadeIn, int stay, int fadeOut, String title, String subTitle) {
+        this.papi = papi;
         this.delay = delay;
         this.fadeIn = fadeIn;
         this.stay = stay;
@@ -22,6 +24,8 @@ public class TitleArguments implements IArguments {
     }
 
     public static TitleArguments parser(Map<String, String> arguments, String last) {
+        String papiStr = get(arguments, "-papi", "--papi", "--placeholder", "--placeholders");
+        boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
         long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
         String title, subTitle;
         if (last.contains("\\n")) {
@@ -55,6 +59,6 @@ public class TitleArguments implements IArguments {
         fadeIn = Util.parseInt(get(arguments, "-i", "--fadeIn", "--fade-in", "--fade_in")).orElse(fadeIn);
         stay = Util.parseInt(get(arguments, "-s", "--stay")).orElse(stay);
         fadeOut = Util.parseInt(get(arguments, "-o", "--fadeOut", "--fade-out", "--fade_out")).orElse(fadeOut);
-        return new TitleArguments(delay, fadeIn, stay, fadeOut, title, subTitle);
+        return new TitleArguments(papi, delay, fadeIn, stay, fadeOut, title, subTitle);
     }
 }

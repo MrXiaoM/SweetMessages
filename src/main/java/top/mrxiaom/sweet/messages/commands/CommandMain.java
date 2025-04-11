@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
@@ -104,7 +105,10 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 }
                 Runnable execute = () -> {
                     for (CommandSender receiver : receivers) {
-                        for (String line : arguments.lines) {
+                        List<String> lines = arguments.papi && receiver instanceof Player
+                                ? PAPI.setPlaceholders((Player) receiver, arguments.lines)
+                                : arguments.lines;
+                        for (String line : lines) {
                             AdventureUtil.sendMessage(receiver, line);
                         }
                     }
@@ -126,10 +130,13 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     return t(sender, "&e请输入消息内容");
                 }
                 Runnable execute = () -> {
+                    boolean papi = arguments.papi;
                     String message = arguments.lines.get(0);
                     for (CommandSender receiver : receivers) {
                         if (receiver instanceof Player) {
-                            AdventureUtil.sendActionBar((Player) receiver, message);
+                            Player player = (Player) receiver;
+                            String msg = papi ? PAPI.setPlaceholders(player, message) : message;
+                            AdventureUtil.sendActionBar(player, msg);
                         }
                     }
                 };
@@ -150,6 +157,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     return t(sender, "&e请输入标题内容");
                 }
                 Runnable execute = () -> {
+                    boolean papi = arguments.papi;
                     String title = arguments.title;
                     String subTitle = arguments.subTitle;
                     int fadeIn = arguments.fadeIn;
@@ -157,7 +165,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     int fadeOut = arguments.fadeOut;
                     for (CommandSender receiver : receivers) {
                         if (receiver instanceof Player) {
-                            AdventureUtil.sendTitle((Player) receiver, title, subTitle, fadeIn, stay, fadeOut);
+                            Player player = (Player) receiver;
+                            AdventureUtil.sendTitle(player,
+                                    papi ? PAPI.setPlaceholders(player, title) : title,
+                                    papi ? PAPI.setPlaceholders(player, subTitle) : subTitle,
+                                    fadeIn, stay, fadeOut);
                         }
                     }
                 };
