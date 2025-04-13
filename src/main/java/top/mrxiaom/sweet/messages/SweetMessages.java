@@ -2,6 +2,7 @@ package top.mrxiaom.sweet.messages;
         
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
+import top.mrxiaom.sweet.messages.utils.FoliaScheduler;
 
 public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
@@ -17,6 +18,7 @@ public class SweetMessages extends BukkitPlugin {
                 .vaultEconomy(false)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
+        scheduler = new FoliaScheduler(this);
     }
 
     @Override

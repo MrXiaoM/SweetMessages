@@ -118,7 +118,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     }
                 };
                 if (arguments.delay > 0)  {
-                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
                 } else {
                     execute.run();
                 }
@@ -145,7 +145,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     }
                 };
                 if (arguments.delay > 0)  {
-                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
                 } else {
                     execute.run();
                 }
@@ -178,7 +178,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     }
                 };
                 if (arguments.delay > 0)  {
-                    Bukkit.getScheduler().runTaskLater(plugin, execute, arguments.delay);
+                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
                 } else {
                     execute.run();
                 }

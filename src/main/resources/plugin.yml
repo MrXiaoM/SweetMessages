@@ -5,6 +5,7 @@ api-version: 1.13
 depend: [  ]
 softdepend: [ PlaceholderAPI ]
 authors: [ MrXiaoM ]
+folia-supported: true
 commands:
   sweetmessages:
     description: 'The main command of SweetMessages'
