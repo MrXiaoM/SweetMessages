@@ -16,6 +16,7 @@ import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
+import top.mrxiaom.sweet.messages.Tips;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.commands.args.TitleArguments;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
@@ -100,11 +101,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argMessage.contains(arg0)) {
                 List<CommandSender> receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
+                    return Tips.invalid_selector.tm(sender, args[1]);
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
                 if (arguments == null) {
-                    return t(sender, "&e请输入消息内容");
+                    return Tips.invalid_content.tm(sender);
                 }
                 Runnable execute = () -> {
                     for (CommandSender receiver : receivers) {
@@ -126,11 +127,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argAction.contains(arg0)) {
                 List<CommandSender> receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
+                    return Tips.invalid_selector.tm(sender, args[1]);
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
                 if (arguments == null) {
-                    return t(sender, "&e请输入消息内容");
+                    return Tips.invalid_content.tm(sender);
                 }
                 Runnable execute = () -> {
                     boolean papi = arguments.papi;
@@ -153,11 +154,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argTitle.contains(arg0)) {
                 List<CommandSender> receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return t(sender, "&e输入的消息接收者 " + args[1] + " 无效");
+                    return Tips.invalid_selector.tm(sender, args[1]);
                 }
                 TitleArguments arguments = parse(TitleArguments::parser, args, 2);
                 if (arguments == null) {
-                    return t(sender, "&e请输入标题内容");
+                    return Tips.invalid_title.tm(sender);
                 }
                 Runnable execute = () -> {
                     boolean papi = arguments.papi;
@@ -185,8 +186,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             if (args.length == 1 && "reload".equals(arg0)) {
                 plugin.reloadConfig();
-                return t(sender, "&a配置文件已重载");
+                return Tips.reload.tm(sender);
             }
+            return Tips.help.tm(sender);
         }
         return true;
     }

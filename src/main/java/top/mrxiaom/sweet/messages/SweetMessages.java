@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.messages;
         
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.func.LanguageManager;
 
 public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
@@ -18,6 +19,12 @@ public class SweetMessages extends BukkitPlugin {
         );
     }
 
+    @Override
+    protected void beforeEnable() {
+        LanguageManager.inst()
+                .setLangFile("messages.yml")
+                .register(Tips.class, Tips::holder);
+    }
 
     @Override
     protected void afterEnable() {
