@@ -1,0 +1,71 @@
+package top.mrxiaom.sweet.messages.nms;
+
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+public class NMS {
+    private static IBossBar bossBar;
+    private static boolean loaded;
+    private static final Map<String, String> VERSION_TO_REVISION = new HashMap<String, String>() {{
+        put("1.20", "v1_20_R1");
+        put("1.20.1", "v1_20_R1");
+        put("1.20.2", "v1_20_R2");
+        put("1.20.3", "v1_20_R3");
+        put("1.20.4", "v1_20_R3");
+        put("1.20.5", "v1_20_R4");
+        put("1.20.6", "v1_20_R4");
+        put("1.21", "v1_21_R1");
+        put("1.21.1", "v1_21_R1");
+        put("1.21.2", "v1_21_R2");
+        put("1.21.3", "v1_21_R2");
+        put("1.21.4", "v1_21_R3");
+        put("1.21.5", "v1_21_R4");
+    }};
+
+    public static boolean init(Logger logger) {
+        if (loaded) return true;
+        String nmsVersion;
+        // Thanks https://github.com/tr7zw/Item-NBT-API
+        try {
+            String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
+            nmsVersion = ver;
+        } catch (Exception e) {
+            logger.info("Found Minecraft: " + Bukkit.getServer().getBukkitVersion().split("-")[0] + "! Trying to find NMS support");
+            String ver = Bukkit.getServer().getBukkitVersion().split("-")[0];
+            nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, "unknown");
+        }
+        try {
+            Class<?> classLivingEntity = Class.forName("top.mrxiaom.sweet.messages.nms.BossBar_" + nmsVersion);
+            bossBar = (IBossBar) classLivingEntity.getConstructor().newInstance();
+            loaded = true;
+        } catch (Exception ignored) {
+        }
+
+        if (loaded) {
+            logger.info("NMS support '" + nmsVersion + "' loaded!");
+        } else {
+            logger.warning("This Server-Version(" + Bukkit.getServer().getBukkitVersion() + ", " + nmsVersion + ") is not supported by this plugin!");
+        }
+
+        return loaded;
+    }
+
+    public static void setTitle(BossBar bossBar, Component component) {
+        NMS.bossBar.setTitle(bossBar, component);
+    }
+
+    public static BossBar createBossBar(Component title, BarColor color, BarStyle style, BarFlag... flags) {
+        BossBar bar = Bukkit.createBossBar(" ", color, style, flags);
+        setTitle(bar, title);
+        return bar;
+    }
+}

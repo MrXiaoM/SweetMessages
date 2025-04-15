@@ -1,5 +1,7 @@
 package top.mrxiaom.sweet.messages;
         
+import org.bukkit.Bukkit;
+import top.mrxiaom.sweet.messages.nms.NMS;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.sweet.messages.utils.FoliaScheduler;
@@ -19,6 +21,16 @@ public class SweetMessages extends BukkitPlugin {
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
         scheduler = new FoliaScheduler(this);
+    }
+
+    @Override
+    @SuppressWarnings({"deprecation"})
+    public void onEnable() {
+        if (!NMS.init(getLogger())) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        super.onEnable();
     }
 
     @Override

@@ -33,6 +33,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
 }
 
+val shadowLink = configurations.create("shadowLink")
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
@@ -46,12 +47,19 @@ dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("top.mrxiaom:PluginBase:1.3.7")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4")
+    implementation(project(":nms"))
+    for (proj in project.project(":nms").subprojects) {
+        if (proj.name.startsWith("v")) {
+            add("shadowLink", proj)
+        }
+    }
 }
 
 setupJava(8)
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        configurations.add(shadowLink)
         mapOf(
             "org.intellij.lang.annotations" to "annotations.intellij",
             "org.jetbrains.annotations" to "annotations.jetbrains",
