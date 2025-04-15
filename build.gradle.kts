@@ -1,3 +1,6 @@
+import java.net.HttpURLConnection
+import java.net.URI
+import java.net.URL
 import java.util.*
 
 plugins {
@@ -14,8 +17,13 @@ val shadowGroup = "top.mrxiaom.sweet.messages.libs"
 repositories {
     mavenLocal()
     mavenCentral()
-    if (Locale.getDefault().country == "CN") {
-        maven("https://maven.fastmirror.net/repositories/minecraft/")
+    if (Locale.getDefault().country == "CN") runCatching {
+        val url = "https://maven.fastmirror.net/repositories/minecraft/"
+        val conn = URI.create(url).toURL().openConnection().apply { connect() } as HttpURLConnection
+        if (conn.responseCode == 200) maven(url)
+        else {
+            println("镜像仓库错误 (${conn.responseCode} ${conn.responseMessage})，不使用镜像")
+        }
     }
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -52,6 +60,7 @@ tasks {
             "org.intellij.lang.annotations" to "annotations.intellij",
             "org.jetbrains.annotations" to "annotations.jetbrains",
             "top.mrxiaom.pluginbase" to "base",
+            "com.tcoded.folialib" to "folialib",
             "net.kyori" to "kyori",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
