@@ -30,6 +30,7 @@ public class NMS {
         put("1.21.5", "v1_21_R4");
     }};
 
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean init(Logger logger) {
         if (loaded) return true;
         String nmsVersion;
@@ -38,7 +39,7 @@ public class NMS {
             String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
             logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
             nmsVersion = ver;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.info("Found Minecraft: " + Bukkit.getServer().getBukkitVersion().split("-")[0] + "! Trying to find NMS support");
             String ver = Bukkit.getServer().getBukkitVersion().split("-")[0];
             nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, "unknown");
@@ -47,12 +48,13 @@ public class NMS {
             Class<?> classLivingEntity = Class.forName("top.mrxiaom.sweet.messages.nms.BossBar_" + nmsVersion);
             bossBar = (IBossBar) classLivingEntity.getConstructor().newInstance();
             loaded = true;
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
 
         if (loaded) {
             logger.info("NMS support '" + nmsVersion + "' loaded!");
         } else {
+            bossBar = new BossBar_Legacy();
             logger.warning("This Server-Version(" + Bukkit.getServer().getBukkitVersion() + ", " + nmsVersion + ") is not supported by this plugin!");
         }
 

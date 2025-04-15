@@ -1,6 +1,5 @@
 package top.mrxiaom.sweet.messages;
         
-import org.bukkit.Bukkit;
 import top.mrxiaom.sweet.messages.nms.NMS;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
@@ -24,13 +23,8 @@ public class SweetMessages extends BukkitPlugin {
     }
 
     @Override
-    @SuppressWarnings({"deprecation"})
-    public void onEnable() {
-        if (!NMS.init(getLogger())) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        super.onEnable();
+    protected void beforeLoad() {
+        NMS.init(getLogger());
     }
 
     @Override
