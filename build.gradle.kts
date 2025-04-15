@@ -11,7 +11,6 @@ plugins {
 
 group = "top.mrxiaom.sweet.messages"
 version = "1.0.0"
-val targetJavaVersion = 8
 val shadowGroup = "top.mrxiaom.sweet.messages.libs"
 
 repositories {
@@ -34,6 +33,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
 }
 
+@Suppress("VulnerableLibrariesLocal")
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     // compileOnly("org.spigotmc:spigot:1.20") // NMS
@@ -47,12 +47,8 @@ dependencies {
     implementation("top.mrxiaom:PluginBase:1.3.7")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4")
 }
-java {
-    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-    }
-}
+
+setupJava(8)
 tasks {
     shadowJar {
         archiveClassifier.set("")
@@ -68,12 +64,6 @@ tasks {
     }
     build {
         dependsOn(shadowJar)
-    }
-    withType<JavaCompile>().configureEach {
-        options.encoding = "UTF-8"
-        if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-            options.release.set(targetJavaVersion)
-        }
     }
     processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
