@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public interface IBossBarWrapper {
+    Component getTitle();
+    EnumBarColor getColor();
+    EnumBarStyle getStyle();
     void setTitle(Component component);
     void setColor(EnumBarColor color);
     void setStyle(EnumBarStyle style);

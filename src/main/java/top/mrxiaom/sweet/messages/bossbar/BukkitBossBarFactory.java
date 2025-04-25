@@ -9,16 +9,23 @@ import top.mrxiaom.sweet.messages.api.EnumBarColor;
 import top.mrxiaom.sweet.messages.api.EnumBarStyle;
 import top.mrxiaom.sweet.messages.api.IBossBarFactory;
 import top.mrxiaom.sweet.messages.api.IBossBarWrapper;
+import top.mrxiaom.sweet.messages.nms.IBossBar;
 import top.mrxiaom.sweet.messages.nms.NMS;
+import top.mrxiaom.sweet.messages.utils.Utils;
 
 public class BukkitBossBarFactory implements IBossBarFactory {
     @Override
     public IBossBarWrapper create(Component title, EnumBarColor color, EnumBarStyle style) {
         BarColor colorImpl = toBukkit(color);
         BarStyle styleImpl = toBukkit(style);
-        BossBar impl = Bukkit.createBossBar("", colorImpl, styleImpl);
-        NMS.getBossBar().setTitle(impl, title);
-        return new BukkitBossBar(impl);
+        IBossBar nms = NMS.getBossBar();
+        if (nms != null) {
+            BossBar impl = Bukkit.createBossBar("", colorImpl, styleImpl);
+            nms.setTitle(impl, title);
+            return new BukkitBossBar(impl);
+        } else {
+            return new BukkitBossBar(Bukkit.createBossBar(Utils.toString(title), colorImpl, styleImpl));
+        }
     }
 
     public static BarColor toBukkit(EnumBarColor color) {

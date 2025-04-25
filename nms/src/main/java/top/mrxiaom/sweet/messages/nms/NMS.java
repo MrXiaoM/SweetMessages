@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.messages.nms;
 
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class NMS {
         return loaded;
     }
 
+    @Nullable
     public static IBossBar getBossBar() {
         return bossBar;
     }
