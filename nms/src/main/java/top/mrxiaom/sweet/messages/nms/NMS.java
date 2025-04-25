@@ -1,11 +1,6 @@
 package top.mrxiaom.sweet.messages.nms;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,13 +56,7 @@ public class NMS {
         return loaded;
     }
 
-    public static void setTitle(BossBar bossBar, Component component) {
-        NMS.bossBar.setTitle(bossBar, component);
-    }
-
-    public static BossBar createBossBar(Component title, BarColor color, BarStyle style, BarFlag... flags) {
-        BossBar bar = Bukkit.createBossBar(" ", color, style, flags);
-        setTitle(bar, title);
-        return bar;
+    public static IBossBar getBossBar() {
+        return bossBar;
     }
 }

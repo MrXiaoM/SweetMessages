@@ -1,5 +1,7 @@
 package top.mrxiaom.sweet.messages;
         
+import top.mrxiaom.sweet.messages.api.IBossBarFactory;
+import top.mrxiaom.sweet.messages.bossbar.BukkitBossBarFactory;
 import top.mrxiaom.sweet.messages.nms.NMS;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
@@ -9,7 +11,7 @@ public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
         return (SweetMessages) BukkitPlugin.getInstance();
     }
-    private boolean supportBossBar;
+    private IBossBarFactory bossBarFactory;
     public SweetMessages() {
         super(options()
                 .bungee(false)
@@ -21,13 +23,17 @@ public class SweetMessages extends BukkitPlugin {
         scheduler = new FoliaScheduler(this);
     }
 
-    public boolean isSupportBossBar() {
-        return supportBossBar;
+    public IBossBarFactory getBossBarFactory() {
+        return bossBarFactory;
     }
 
     @Override
     protected void beforeLoad() {
-        supportBossBar = NMS.init(getLogger());
+        if (NMS.init(getLogger())) { // 1.9+ Bukkit 添加 BOSS 血条接口
+            bossBarFactory = new BukkitBossBarFactory();
+        } else {
+            // TODO: 添加一个 LegacyBossBarFactory，可能要找一些 1.7、1.8 时代用末影龙、凋灵实体做 BOSS 血条的库
+        }
     }
 
     @Override

@@ -35,6 +35,7 @@ dependencies {
     implementation("top.mrxiaom:PluginBase:1.4.0")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4")
     implementation(project(":nms"))
+    implementation(project(":nms:shared"))
     for (proj in project.project(":nms").subprojects) {
         if (proj.name.startsWith("v")) {
             add("shadowLink", proj)
