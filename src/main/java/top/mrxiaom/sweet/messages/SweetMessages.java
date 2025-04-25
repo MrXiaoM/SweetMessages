@@ -1,11 +1,11 @@
 package top.mrxiaom.sweet.messages;
         
+import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.messages.api.IBossBarFactory;
 import top.mrxiaom.sweet.messages.bossbar.BukkitBossBarFactory;
 import top.mrxiaom.sweet.messages.nms.NMS;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
-import top.mrxiaom.sweet.messages.utils.FoliaScheduler;
 
 public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
@@ -20,7 +20,7 @@ public class SweetMessages extends BukkitPlugin {
                 .reconnectDatabaseWhenReloadConfig(false)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
-        scheduler = new FoliaScheduler(this);
+        scheduler = new FoliaLibScheduler(this);
     }
 
     public IBossBarFactory getBossBarFactory() {
