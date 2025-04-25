@@ -9,22 +9,25 @@ public class SweetMessages extends BukkitPlugin {
     public static SweetMessages getInstance() {
         return (SweetMessages) BukkitPlugin.getInstance();
     }
-
+    private boolean supportBossBar;
     public SweetMessages() {
         super(options()
                 .bungee(false)
                 .adventure(true)
                 .database(false)
                 .reconnectDatabaseWhenReloadConfig(false)
-                .vaultEconomy(false)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
         scheduler = new FoliaScheduler(this);
     }
 
+    public boolean isSupportBossBar() {
+        return supportBossBar;
+    }
+
     @Override
     protected void beforeLoad() {
-        NMS.init(getLogger());
+        supportBossBar = NMS.init(getLogger());
     }
 
     @Override
