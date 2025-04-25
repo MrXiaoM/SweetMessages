@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.messages.nms;
 
 import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -20,5 +21,12 @@ public class BossBar_v1_20_R3 implements IBossBar {
         JsonElement json = serializer.serializeToTree(component);
         Optional<IChatBaseComponent> result = ComponentSerialization.a.parse(JsonOps.INSTANCE, json).result();
         result.ifPresent(nms::a);
+    }
+
+    public Component getTitle(BossBar bossBar) {
+        BossBattleServer nms = ((CraftBossBar) bossBar).getHandle();
+        if (nms == null) return null;
+        Optional<JsonElement> result = ComponentSerialization.a.encodeStart(JsonOps.INSTANCE, nms.j()).result();
+        return result.map(serializer::deserializeFromTree).orElse(null);
     }
 }

@@ -5,4 +5,5 @@ import org.bukkit.boss.BossBar;
 
 public interface IBossBar {
     void setTitle(BossBar bossBar, Component component);
+    Component getTitle(BossBar bossBar);
 }

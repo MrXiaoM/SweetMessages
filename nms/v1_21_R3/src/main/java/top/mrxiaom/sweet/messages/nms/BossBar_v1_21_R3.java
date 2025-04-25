@@ -21,4 +21,11 @@ public class BossBar_v1_21_R3 implements IBossBar {
         Optional<IChatBaseComponent> result = ComponentSerialization.a.parse(JsonOps.INSTANCE, json).result();
         result.ifPresent(nms::a);
     }
+
+    public Component getTitle(BossBar bossBar) {
+        BossBattleServer nms = ((CraftBossBar) bossBar).getHandle();
+        if (nms == null) return null;
+        Optional<JsonElement> result = ComponentSerialization.a.encodeStart(JsonOps.INSTANCE, nms.i()).result();
+        return result.map(serializer::deserializeFromTree).orElse(null);
+    }
 }

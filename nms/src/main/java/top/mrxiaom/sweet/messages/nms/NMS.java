@@ -55,7 +55,7 @@ public class NMS {
             logger.info("NMS support '" + nmsVersion + "' loaded!");
         } else {
             bossBar = new BossBar_Legacy();
-            logger.warning("This Server-Version(" + Bukkit.getServer().getBukkitVersion() + ", " + nmsVersion + ") is not supported by this plugin!");
+            logger.severe("This Server-Version(" + Bukkit.getServer().getBukkitVersion() + ", " + nmsVersion + ") is not supported by this plugin!");
         }
 
         return loaded;

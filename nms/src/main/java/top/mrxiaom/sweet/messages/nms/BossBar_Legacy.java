@@ -10,4 +10,9 @@ public class BossBar_Legacy implements IBossBar {
     public void setTitle(BossBar bossBar, Component component) {
         bossBar.setTitle(legacy.serialize(component));
     }
+
+    @Override
+    public Component getTitle(BossBar bossBar) {
+        return legacy.deserialize(bossBar.getTitle());
+    }
 }

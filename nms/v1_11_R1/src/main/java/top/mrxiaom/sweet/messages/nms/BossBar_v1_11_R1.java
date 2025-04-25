@@ -31,4 +31,11 @@ public class BossBar_v1_11_R1 implements IBossBar {
         IChatBaseComponent result = IChatBaseComponent.ChatSerializer.a(json);
         nms.a(result);
     }
+
+    public Component getTitle(BossBar bossBar) {
+        BossBattleServer nms = getHandle(bossBar);
+        if (nms == null) return null;
+        String json = IChatBaseComponent.ChatSerializer.a(nms.e());
+        return serializer.deserialize(json);
+    }
 }
