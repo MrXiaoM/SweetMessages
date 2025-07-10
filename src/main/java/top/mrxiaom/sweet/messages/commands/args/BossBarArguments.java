@@ -28,8 +28,9 @@ public class BossBarArguments implements IArguments {
     public final EnumBarStyle style;
     public final String title;
     public final @Nullable IAction postActions;
+    public final String postActionsRaw;
 
-    public BossBarArguments(boolean papi, long delay, long duration, EnumBarColor color, EnumBarStyle style, String text, @Nullable IAction postActions) {
+    public BossBarArguments(boolean papi, long delay, long duration, EnumBarColor color, EnumBarStyle style, String text, @Nullable IAction postActions, @Nullable String postActionsRaw) {
         this.papi = papi;
         this.delay = delay;
         this.duration = duration;
@@ -37,6 +38,7 @@ public class BossBarArguments implements IArguments {
         this.style = style;
         this.title = text;
         this.postActions = postActions;
+        this.postActionsRaw = postActionsRaw;
     }
 
     @Override
@@ -81,9 +83,11 @@ public class BossBarArguments implements IArguments {
             if (!actions.isEmpty()) {
                 postActions = actions.get(0);
             }
+        } else {
+            postActionsStr = null;
         }
         EnumBarColor barColor = Util.valueOr(EnumBarColor.class, get(arguments, "-c", "--color"), EnumBarColor.WHITE);
         EnumBarStyle barStyle = Util.valueOr(EnumBarStyle.class, get(arguments, "-s", "--style"), EnumBarStyle.SOLID);
-        return new BossBarArguments(papi, delay, (long)(duration / 20L), barColor, barStyle, last, postActions);
+        return new BossBarArguments(papi, delay, (long)(duration / 20L), barColor, barStyle, last, postActions, postActionsStr);
     }
 }

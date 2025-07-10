@@ -59,7 +59,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             return new BukkitReceivers(receivers);
         }
         if (s.equals("@c") || s.equals("@console")) {
-
+            return new BukkitReceivers(Bukkit.getConsoleSender());
         }
         if (s.equals("@s") || s.equals("@self")) { // 自己
             return new BukkitReceivers(sender);
@@ -195,6 +195,16 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (arguments instanceof TextArguments) {
                 arguments.execute(plugin, receivers.getList());
                 manager.broadcastText(whoever, (TextArguments) arguments);
+                return;
+            }
+            if (arguments instanceof TitleArguments) {
+                arguments.execute(plugin, receivers.getList());
+                manager.broadcastTitle(whoever, (TitleArguments) arguments);
+                return;
+            }
+            if (arguments instanceof BossBarArguments) {
+                arguments.execute(plugin, receivers.getList());
+                manager.broadcastBossBar(whoever, (BossBarArguments) arguments);
                 return;
             }
             Tips.bungeecord__not_supported.tm(sender);
