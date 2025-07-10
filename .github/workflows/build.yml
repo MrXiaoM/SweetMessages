@@ -29,5 +29,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SweetMessages
-          path: build/libs/*.jar
+          path: out/*.jar
           if-no-files-found: error
