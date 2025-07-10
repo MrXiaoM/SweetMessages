@@ -1,7 +1,7 @@
 package top.mrxiaom.sweet.messages.commands;
         
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -13,18 +13,18 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.AutoRegister;
-import top.mrxiaom.pluginbase.utils.AdventureUtil;
-import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.Tips;
-import top.mrxiaom.sweet.messages.api.EnumBarColor;
-import top.mrxiaom.sweet.messages.api.EnumBarStyle;
-import top.mrxiaom.sweet.messages.api.IBossBarWrapper;
 import top.mrxiaom.sweet.messages.commands.args.BossBarArguments;
+import top.mrxiaom.sweet.messages.commands.args.IArguments;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.commands.args.TitleArguments;
+import top.mrxiaom.sweet.messages.commands.receivers.BukkitReceivers;
+import top.mrxiaom.sweet.messages.commands.receivers.BungeeAllReceivers;
+import top.mrxiaom.sweet.messages.commands.receivers.IReceivers;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
+import top.mrxiaom.sweet.messages.func.BungeeBroadcastManager;
 
 import java.util.*;
 
@@ -45,15 +45,15 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
      * <a href="https://zh.minecraft.wiki/w/%E7%9B%AE%E6%A0%87%E9%80%89%E6%8B%A9%E5%99%A8">Minecraft Wiki</a>
      */
     @SuppressWarnings("IfCanBeSwitch")
-    public List<CommandSender> parseReceivers(CommandSender sender, String s) {
+    public IReceivers parseReceivers(CommandSender sender, String s) {
         if (s.equals("@a") || s.equals("@e")) { // 所有在线玩家
             List<CommandSender> receivers = new ArrayList<>();
             receivers.add(Bukkit.getConsoleSender()); // 为了后台也能收到，把它也加进去，留个底
             receivers.addAll(Bukkit.getOnlinePlayers());
-            return receivers;
+            return new BukkitReceivers(receivers);
         }
         if (s.equals("@s")) { // 自己
-            return Lists.newArrayList(sender);
+            return new BukkitReceivers(sender);
         }
         if (s.equals("@p")) { // 距离自己最近的玩家
             if (sender instanceof Player) {
@@ -71,15 +71,15 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         target = p;
                     }
                 }
-                return Lists.newArrayList(target);
+                return new BukkitReceivers(target);
             }
         }
         if (s.equals("@r")) { // 随机玩家
             List<CommandSender> list = Lists.newArrayList(Bukkit.getOnlinePlayers());
             if (list.isEmpty()) return null;
-            if (list.size() == 1) return list;
+            if (list.size() == 1) return new BukkitReceivers(list);
             int index = new Random().nextInt(list.size());
-            return Lists.newArrayList(list.get(index));
+            return new BukkitReceivers(list.get(index));
         }
         if (s.startsWith("@")) { // 其它选择器均不支持
             return null;
@@ -88,11 +88,12 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             String[] split = s.split(",");
             List<Player> players = Util.getOnlinePlayersByName(Arrays.asList(split));
             if (players.isEmpty()) return null;
-            return new ArrayList<>(players);
+            return new BukkitReceivers(new ArrayList<>(players));
         }
         return Util.getOnlinePlayer(s)
                 .map(it -> (CommandSender) it)
                 .map(Lists::newArrayList)
+                .map(BukkitReceivers::new)
                 .orElse(null);
     }
 
@@ -105,7 +106,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         if (sender.isOp()) {
             String arg0 = args[0].toLowerCase();
             if (args.length >= 2 && argMessage.contains(arg0)) {
-                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
                     return Tips.invalid_selector.tm(sender, args[1]);
                 }
@@ -113,11 +114,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_content.tm(sender);
                 }
-                arguments.execute(plugin, receivers);
+                execute(sender, receivers, arguments);
                 return true;
             }
             if (args.length >= 2 && argAction.contains(arg0)) {
-                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
                     return Tips.invalid_selector.tm(sender, args[1]);
                 }
@@ -126,11 +127,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                     return Tips.invalid_content.tm(sender);
                 }
                 arguments.isActionMessage = true;
-                arguments.execute(plugin, receivers);
+                execute(sender, receivers, arguments);
                 return true;
             }
             if (args.length >= 2 && argTitle.contains(arg0)) {
-                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
                     return Tips.invalid_selector.tm(sender, args[1]);
                 }
@@ -138,11 +139,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_title.tm(sender);
                 }
-                arguments.execute(plugin, receivers);
+                execute(sender, receivers, arguments);
                 return true;
             }
             if (args.length >= 2 && argBossBar.contains(arg0)) {
-                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
                     return Tips.invalid_selector.tm(sender, args[1]);
                 }
@@ -150,7 +151,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_bossbar.tm(sender);
                 }
-                arguments.execute(plugin, receivers);
+                execute(sender, receivers, arguments);
                 return true;
             }
             if (args.length == 1 && "reload".equals(arg0)) {
@@ -160,6 +161,10 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             return Tips.help.tm(sender);
         }
         return true;
+    }
+
+    private void execute(CommandSender sender, IReceivers receivers, IArguments arguments) {
+        arguments.execute(plugin, receivers.getList());
     }
 
     private static final List<String> emptyList = Lists.newArrayList();
