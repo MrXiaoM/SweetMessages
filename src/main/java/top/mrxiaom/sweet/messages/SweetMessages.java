@@ -1,5 +1,5 @@
 package top.mrxiaom.sweet.messages;
-        
+
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.messages.api.IBossBarFactory;
@@ -35,7 +35,7 @@ public class SweetMessages extends BukkitPlugin {
         if (Util.isPresent("org.bukkit.boss.BossBar")) {
             bossBarFactory = new BukkitBossBarFactory();
         } else {
-            // TODO: 添加一个 LegacyBossBarFactory，可能要找一些 1.7、1.8 时代用末影龙、凋灵实体做 BOSS 血条的库
+            warn("当前版本不支持显示 BOSS 血条");
         }
     }
 

@@ -1,6 +1,7 @@
 package top.mrxiaom.sweet.messages.commands;
         
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -17,6 +18,10 @@ import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.Tips;
+import top.mrxiaom.sweet.messages.api.EnumBarColor;
+import top.mrxiaom.sweet.messages.api.EnumBarStyle;
+import top.mrxiaom.sweet.messages.api.IBossBarWrapper;
+import top.mrxiaom.sweet.messages.commands.args.BossBarArguments;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.commands.args.TitleArguments;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
@@ -94,6 +99,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     List<String> argMessage = Lists.newArrayList("message", "msg", "m");
     List<String> argAction = Lists.newArrayList("actionbar", "action", "a");
     List<String> argTitle = Lists.newArrayList("title", "t");
+    List<String> argBossBar = Lists.newArrayList("bossbar", "bar", "b");
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.isOp()) {
@@ -174,6 +180,45 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                                     papi ? PAPI.setPlaceholders(player, title) : title,
                                     papi ? PAPI.setPlaceholders(player, subTitle) : subTitle,
                                     fadeIn, stay, fadeOut);
+                        }
+                    }
+                };
+                if (arguments.delay > 0)  {
+                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
+                } else {
+                    execute.run();
+                }
+                return true;
+            }
+            if (args.length >= 2 && argBossBar.contains(arg0)) {
+                List<CommandSender> receivers = parseReceivers(sender, args[1]);
+                if (receivers == null) {
+                    return Tips.invalid_selector.tm(sender, args[1]);
+                }
+                BossBarArguments arguments = parse(BossBarArguments::parser, args, 2);
+                if (arguments == null) {
+                    return Tips.invalid_bossbar.tm(sender);
+                }
+                Runnable execute = () -> {
+                    boolean papi = arguments.papi;
+                    String title = arguments.title;
+                    for (CommandSender receiver : receivers) {
+                        if (receiver instanceof Player) {
+                            Player player = (Player) receiver;
+                            String msg = papi ? PAPI.setPlaceholders(player, title) : title;
+
+                            Component component = AdventureUtil.miniMessage(msg);
+                            IBossBarWrapper bar = plugin.getBossBarFactory().create(component, arguments.color, arguments.style);
+                            bar.addPlayer(player);
+                            bar.setVisible(true);
+
+                            plugin.getScheduler().runTaskLater(() -> {
+                                bar.setVisible(false);
+                                bar.removeAll();
+                                if (arguments.postActions != null) {
+                                    arguments.postActions.run(player);
+                                }
+                            }, arguments.duration);
                         }
                     }
                 };
