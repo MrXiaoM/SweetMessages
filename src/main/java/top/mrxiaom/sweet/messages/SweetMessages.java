@@ -15,7 +15,7 @@ public class SweetMessages extends BukkitPlugin {
     private IBossBarFactory bossBarFactory;
     public SweetMessages() {
         super(options()
-                .bungee(false)
+                .bungee(true)
                 .adventure(true)
                 .database(false)
                 .reconnectDatabaseWhenReloadConfig(false)

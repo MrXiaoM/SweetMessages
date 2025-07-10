@@ -46,6 +46,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
      */
     @SuppressWarnings("IfCanBeSwitch")
     public IReceivers parseReceivers(CommandSender sender, String s) {
+        if (s.equals("@bc")) {
+            return BungeeAllReceivers.INSTANCE;
+        }
         if (s.equals("@a") || s.equals("@e")) { // 所有在线玩家
             List<CommandSender> receivers = new ArrayList<>();
             receivers.add(Bukkit.getConsoleSender()); // 为了后台也能收到，把它也加进去，留个底
@@ -164,6 +167,21 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     }
 
     private void execute(CommandSender sender, IReceivers receivers, IArguments arguments) {
+        if (receivers instanceof BungeeAllReceivers) {
+            BungeeBroadcastManager manager = BungeeBroadcastManager.inst();
+            Player whoever = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+            if (whoever == null) {
+                Tips.bungeecord__no_players.tm(sender);
+                return;
+            }
+            if (arguments instanceof TextArguments) {
+                arguments.execute(plugin, receivers.getList());
+                manager.broadcastText(whoever, (TextArguments) arguments);
+                return;
+            }
+            Tips.bungeecord__not_supported.tm(sender);
+            return;
+        }
         arguments.execute(plugin, receivers.getList());
     }
 

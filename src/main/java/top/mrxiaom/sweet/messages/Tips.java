@@ -23,6 +23,8 @@ public enum Tips implements IHolderAccessor {
     invalid_content("&e请输入消息内容"),
     invalid_title("&e请输入标题内容"),
     invalid_bossbar("&e请输入血条文字内容"),
+    bungeecord__not_supported("&e类型 %type% 暂不支持 BungeeCord 广播"),
+    bungeecord__no_players("&eBungeeCord 广播要求至少一名玩家在线"),
     ;
 
     Tips(String defaultValue) {
