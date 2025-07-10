@@ -113,21 +113,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_content.tm(sender);
                 }
-                Runnable execute = () -> {
-                    for (CommandSender receiver : receivers) {
-                        List<String> lines = arguments.papi && receiver instanceof Player
-                                ? PAPI.setPlaceholders((Player) receiver, arguments.lines)
-                                : arguments.lines;
-                        for (String line : lines) {
-                            AdventureUtil.sendMessage(receiver, line);
-                        }
-                    }
-                };
-                if (arguments.delay > 0)  {
-                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
-                } else {
-                    execute.run();
-                }
+                arguments.execute(plugin, receivers);
                 return true;
             }
             if (args.length >= 2 && argAction.contains(arg0)) {
@@ -139,22 +125,8 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_content.tm(sender);
                 }
-                Runnable execute = () -> {
-                    boolean papi = arguments.papi;
-                    String message = arguments.lines.get(0);
-                    for (CommandSender receiver : receivers) {
-                        if (receiver instanceof Player) {
-                            Player player = (Player) receiver;
-                            String msg = papi ? PAPI.setPlaceholders(player, message) : message;
-                            AdventureUtil.sendActionBar(player, msg);
-                        }
-                    }
-                };
-                if (arguments.delay > 0)  {
-                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
-                } else {
-                    execute.run();
-                }
+                arguments.isActionMessage = true;
+                arguments.execute(plugin, receivers);
                 return true;
             }
             if (args.length >= 2 && argTitle.contains(arg0)) {
@@ -166,28 +138,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_title.tm(sender);
                 }
-                Runnable execute = () -> {
-                    boolean papi = arguments.papi;
-                    String title = arguments.title;
-                    String subTitle = arguments.subTitle;
-                    int fadeIn = arguments.fadeIn;
-                    int stay = arguments.stay;
-                    int fadeOut = arguments.fadeOut;
-                    for (CommandSender receiver : receivers) {
-                        if (receiver instanceof Player) {
-                            Player player = (Player) receiver;
-                            AdventureUtil.sendTitle(player,
-                                    papi ? PAPI.setPlaceholders(player, title) : title,
-                                    papi ? PAPI.setPlaceholders(player, subTitle) : subTitle,
-                                    fadeIn, stay, fadeOut);
-                        }
-                    }
-                };
-                if (arguments.delay > 0)  {
-                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
-                } else {
-                    execute.run();
-                }
+                arguments.execute(plugin, receivers);
                 return true;
             }
             if (args.length >= 2 && argBossBar.contains(arg0)) {
@@ -199,34 +150,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 if (arguments == null) {
                     return Tips.invalid_bossbar.tm(sender);
                 }
-                Runnable execute = () -> {
-                    boolean papi = arguments.papi;
-                    String title = arguments.title;
-                    for (CommandSender receiver : receivers) {
-                        if (receiver instanceof Player) {
-                            Player player = (Player) receiver;
-                            String msg = papi ? PAPI.setPlaceholders(player, title) : title;
-
-                            Component component = AdventureUtil.miniMessage(msg);
-                            IBossBarWrapper bar = plugin.getBossBarFactory().create(component, arguments.color, arguments.style);
-                            bar.addPlayer(player);
-                            bar.setVisible(true);
-
-                            plugin.getScheduler().runTaskLater(() -> {
-                                bar.setVisible(false);
-                                bar.removeAll();
-                                if (arguments.postActions != null) {
-                                    arguments.postActions.run(player);
-                                }
-                            }, arguments.duration);
-                        }
-                    }
-                };
-                if (arguments.delay > 0)  {
-                    plugin.getScheduler().runTaskLater(execute, arguments.delay);
-                } else {
-                    execute.run();
-                }
+                arguments.execute(plugin, receivers);
                 return true;
             }
             if (args.length == 1 && "reload".equals(arg0)) {

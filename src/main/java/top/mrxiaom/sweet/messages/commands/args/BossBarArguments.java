@@ -1,12 +1,19 @@
 package top.mrxiaom.sweet.messages.commands.args;
 
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.actions.ActionProviders;
 import top.mrxiaom.pluginbase.api.IAction;
+import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.api.EnumBarColor;
 import top.mrxiaom.sweet.messages.api.EnumBarStyle;
+import top.mrxiaom.sweet.messages.api.IBossBarWrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +37,36 @@ public class BossBarArguments implements IArguments {
         this.style = style;
         this.title = text;
         this.postActions = postActions;
+    }
+
+    @Override
+    public void execute(SweetMessages plugin, List<CommandSender> receivers) {
+        Runnable execute = () -> {
+            for (CommandSender receiver : receivers) {
+                if (receiver instanceof Player) {
+                    Player player = (Player) receiver;
+                    String msg = papi ? PAPI.setPlaceholders(player, title) : title;
+
+                    Component component = AdventureUtil.miniMessage(msg);
+                    IBossBarWrapper bar = plugin.getBossBarFactory().create(component, color, style);
+                    bar.addPlayer(player);
+                    bar.setVisible(true);
+
+                    plugin.getScheduler().runTaskLater(() -> {
+                        bar.setVisible(false);
+                        bar.removeAll();
+                        if (postActions != null) {
+                            postActions.run(player);
+                        }
+                    }, duration);
+                }
+            }
+        };
+        if (delay > 0)  {
+            plugin.getScheduler().runTaskLater(execute, delay);
+        } else {
+            execute.run();
+        }
     }
 
     public static BossBarArguments parser(Map<String, String> arguments, String last) {

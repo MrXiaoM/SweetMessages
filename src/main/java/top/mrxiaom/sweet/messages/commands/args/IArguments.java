@@ -1,6 +1,10 @@
 package top.mrxiaom.sweet.messages.commands.args;
 
+import org.bukkit.command.CommandSender;
+import top.mrxiaom.sweet.messages.SweetMessages;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface IArguments {
@@ -8,6 +12,9 @@ public interface IArguments {
     interface Parser<T> {
         T parse(Map<String, String> arguments, String last);
     }
+
+    void execute(SweetMessages plugin, List<CommandSender> receivers);
+
     static <T extends IArguments> T parse(Parser<T> parser, String[] args, int startIndex) {
         Map<String, String> arguments = new HashMap<>();
         int i = startIndex;

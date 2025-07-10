@@ -1,8 +1,14 @@
 package top.mrxiaom.sweet.messages.commands.args;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.func.TitlePresetManager;
 
+import java.util.List;
 import java.util.Map;
 
 import static top.mrxiaom.sweet.messages.commands.args.IArguments.get;
@@ -21,6 +27,26 @@ public class TitleArguments implements IArguments {
         this.fadeOut = fadeOut;
         this.title = title;
         this.subTitle = subTitle;
+    }
+
+    @Override
+    public void execute(SweetMessages plugin, List<CommandSender> receivers) {
+        Runnable execute = () -> {
+            for (CommandSender receiver : receivers) {
+                if (receiver instanceof Player) {
+                    Player player = (Player) receiver;
+                    AdventureUtil.sendTitle(player,
+                            papi ? PAPI.setPlaceholders(player, title) : title,
+                            papi ? PAPI.setPlaceholders(player, subTitle) : subTitle,
+                            fadeIn, stay, fadeOut);
+                }
+            }
+        };
+        if (delay > 0)  {
+            plugin.getScheduler().runTaskLater(execute, delay);
+        } else {
+            execute.run();
+        }
     }
 
     public static TitleArguments parser(Map<String, String> arguments, String last) {
