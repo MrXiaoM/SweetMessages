@@ -25,6 +25,8 @@ import top.mrxiaom.sweet.messages.commands.receivers.BungeeAllReceivers;
 import top.mrxiaom.sweet.messages.commands.receivers.IReceivers;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
 import top.mrxiaom.sweet.messages.func.BungeeBroadcastManager;
+import top.mrxiaom.sweet.messages.func.TemplateManager;
+import top.mrxiaom.sweet.messages.template.AbstractTemplate;
 
 import java.util.*;
 
@@ -35,6 +37,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     public CommandMain(SweetMessages plugin) {
         super(plugin);
         registerCommand("sweetmessages", this);
+        listOpArg0.add("template");
         listOpArg0.addAll(argMessage);
         listOpArg0.addAll(argAction);
         listOpArg0.addAll(argTitle);
@@ -108,6 +111,18 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.isOp()) {
             String arg0 = args[0].toLowerCase();
+            if (args.length >= 3 && "template".equals(arg0)) {
+                IReceivers receivers = parseReceivers(sender, args[1]);
+                if (receivers == null) {
+                    return Tips.invalid_selector.tm(sender, args[1]);
+                }
+                AbstractTemplate template = TemplateManager.inst().get(args[2]);
+                if (template == null) {
+                    return Tips.invalid_template.tm(sender, args[2]);
+                }
+                template.execute(plugin, sender, receivers);
+                return true;
+            }
             if (args.length >= 2 && argMessage.contains(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
@@ -187,7 +202,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
 
     private static final List<String> emptyList = Lists.newArrayList();
     private static final List<String> listOpArg0 = new ArrayList<>();
-    private static final List<String> listTargetArg1 = Lists.newArrayList("@a", "@e", "@s", "@p", "@r");
+    private static final List<String> listTargetArg1 = Lists.newArrayList("@bc", "@a", "@e", "@s", "@p", "@r");
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
@@ -197,7 +212,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             }
             if (args.length == 2) {
                 String arg0 = args[0].toLowerCase();
-                if (argMessage.contains(arg0) || argAction.contains(arg0) || argTitle.contains(arg0)) {
+                if ("template".equals(arg0) || argMessage.contains(arg0) || argAction.contains(arg0) || argTitle.contains(arg0)) {
                     if (args[1].startsWith("@")) {
                         return startsWith(listTargetArg1, args[1]);
                     }
@@ -218,6 +233,12 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                         }
                     }
                     return list;
+                }
+            }
+            if (args.length == 3) {
+                String arg0 = args[0].toLowerCase();
+                if ("template".equals(arg0)) {
+                    return startsWith(TemplateManager.inst().keys(), args[2]);
                 }
             }
         }

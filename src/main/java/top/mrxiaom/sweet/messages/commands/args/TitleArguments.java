@@ -50,9 +50,6 @@ public class TitleArguments implements IArguments {
     }
 
     public static TitleArguments parser(Map<String, String> arguments, String last) {
-        String papiStr = get(arguments, "-p", "--papi", "--placeholder", "--placeholders");
-        boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
-        long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
         String title, subTitle;
         if (last.contains("\\n")) {
             int index = last.indexOf("\\n");
@@ -62,6 +59,13 @@ public class TitleArguments implements IArguments {
             title = last;
             subTitle = "";
         }
+        return parser(arguments, title, subTitle);
+    }
+
+    public static TitleArguments parser(Map<String, String> arguments, String title, String subTitle) {
+        String papiStr = get(arguments, "-p", "--papi", "--placeholder", "--placeholders");
+        boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
+        long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
         TitlePresetManager manager = TitlePresetManager.inst();
         String time = get(arguments, "time");
         int fadeIn = manager.getDefaultFadeIn();

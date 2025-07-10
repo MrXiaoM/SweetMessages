@@ -54,12 +54,16 @@ public class TextArguments implements IArguments {
     }
 
     public static TextArguments parser(Map<String, String> arguments, String last) {
+        List<String> lines = last.contains("\\n")
+                ? Lists.newArrayList(last.split("\\n"))
+                : Lists.newArrayList(last);
+        return parser(arguments, lines);
+    }
+
+    public static TextArguments parser(Map<String, String> arguments, List<String> lines) {
         String papiStr = get(arguments, "-p", "--papi", "--placeholder", "--placeholders");
         boolean papi = "true".equals(papiStr) || "yes".equals(papiStr);
         Long delay = Util.parseLong(get(arguments, "-d", "--delay")).orElse(0L);
-        List<String> lines = last.contains("\\n")
-            ? Lists.newArrayList(last.split("\\n"))
-            : Lists.newArrayList(last);
         return new TextArguments(papi, delay, lines);
     }
 }
