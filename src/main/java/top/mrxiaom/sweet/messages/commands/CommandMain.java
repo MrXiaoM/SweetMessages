@@ -49,19 +49,22 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
      */
     @SuppressWarnings("IfCanBeSwitch")
     public IReceivers parseReceivers(CommandSender sender, String s) {
-        if (s.equals("@bc")) {
+        if (s.equals("@bc") || s.equals("@bungeecord") || s.equals("@broadcast")) {
             return BungeeAllReceivers.INSTANCE;
         }
-        if (s.equals("@a") || s.equals("@e")) { // 所有在线玩家
+        if (s.equals("@a") || s.equals("@all") || s.equals("@e")) { // 所有在线玩家
             List<CommandSender> receivers = new ArrayList<>();
             receivers.add(Bukkit.getConsoleSender()); // 为了后台也能收到，把它也加进去，留个底
             receivers.addAll(Bukkit.getOnlinePlayers());
             return new BukkitReceivers(receivers);
         }
-        if (s.equals("@s")) { // 自己
+        if (s.equals("@c") || s.equals("@console")) {
+
+        }
+        if (s.equals("@s") || s.equals("@self")) { // 自己
             return new BukkitReceivers(sender);
         }
-        if (s.equals("@p")) { // 距离自己最近的玩家
+        if (s.equals("@p") || s.equals("@player")) { // 距离自己最近的玩家
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 Location loc = player.getLocation();
@@ -80,7 +83,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 return new BukkitReceivers(target);
             }
         }
-        if (s.equals("@r")) { // 随机玩家
+        if (s.equals("@r") || s.equals("@random")) { // 随机玩家
             List<CommandSender> list = Lists.newArrayList(Bukkit.getOnlinePlayers());
             if (list.isEmpty()) return null;
             if (list.size() == 1) return new BukkitReceivers(list);
