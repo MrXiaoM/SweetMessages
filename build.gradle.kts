@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "top.mrxiaom.sweet.messages"
-version = "1.0.0"
+version = "1.0.1"
 val shadowGroup = "top.mrxiaom.sweet.messages.libs"
 
 repositories {
