@@ -1,6 +1,6 @@
 # SweetMessages
 
-消息相关的基础命令插件。支持 [MiniMessage格式](https://docs.advntr.dev/minimessage/format.html) 以及 PAPI 变量
+消息相关的基础命令插件。支持 [MiniMessage格式](https://plugins.mcio.dev/docs/misc/formatting) 以及 PAPI 变量
 
 PAPI 变量默认不替换，自行在命令选项添加 `-p=true` 来替换变量。
 
