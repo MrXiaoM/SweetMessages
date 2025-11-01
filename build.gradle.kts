@@ -12,7 +12,7 @@ buildscript {
 val base = top.mrxiaom.gradle.LibraryHelper(project)
 
 group = "top.mrxiaom.sweet.messages"
-version = "1.0.1"
+version = "1.0.2"
 val pluginBaseModules = listOf("library", "l10n", "actions", "misc")
 val pluginBaseVersion = "1.7.0"
 val shadowGroup = "top.mrxiaom.sweet.messages.libs"
