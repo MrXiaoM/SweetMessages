@@ -46,7 +46,7 @@ dependencies {
         implementation("top.mrxiaom.pluginbase:$artifact:$pluginBaseVersion")
     }
     implementation("top.mrxiaom:LibrariesResolver-Lite:$pluginBaseVersion")
-    implementation("com.github.technicallycoded:FoliaLib:0.4.4")
+    implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
     implementation(project(":nms"))
     implementation(project(":nms:shared"))
     for (proj in project.project(":nms").subprojects) {
