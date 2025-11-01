@@ -27,6 +27,8 @@ public class NMS {
         put("1.21.6", "v1_21_R5");
         put("1.21.7", "v1_21_R5");
         put("1.21.8", "v1_21_R5");
+        put("1.21.9", "v1_21_R6");
+        put("1.21.10", "v1_21_R6");
     }};
 
     @SuppressWarnings("UnusedReturnValue")
@@ -39,8 +41,8 @@ public class NMS {
             logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
             nmsVersion = ver;
         } catch (Throwable e) {
-            logger.info("Found Minecraft: " + Bukkit.getServer().getBukkitVersion().split("-")[0] + "! Trying to find NMS support");
             String ver = Bukkit.getServer().getBukkitVersion().split("-")[0];
+            logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
             nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, "unknown");
         }
         try {
