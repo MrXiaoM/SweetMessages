@@ -113,7 +113,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.isOp()) {
-            String arg0 = args[0].toLowerCase();
+            String arg0 = args.length > 0 ? args[0].toLowerCase() : "";
             if (args.length >= 3 && "template".equals(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
