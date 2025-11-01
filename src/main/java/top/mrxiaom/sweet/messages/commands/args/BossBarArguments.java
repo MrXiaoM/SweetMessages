@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.actions.ActionProviders;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
-import top.mrxiaom.pluginbase.utils.PAPI;
+import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.api.EnumBarColor;
