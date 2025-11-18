@@ -38,7 +38,7 @@ public class MessageBroadcastDatabase extends AbstractPluginHolder implements ID
         TABLE_NAME = tablePrefix + "broadcast";
         try (PreparedStatement ps = conn.prepareStatement(
                 "CREATE TABLE if NOT EXISTS `" + TABLE_NAME + "`(" +
-                        "`sequence` INT NOT NULL AUTO_INCREMENT," +
+                        "`sequence` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                         "`uuid` VARCHAR(64)," +
                         "`message` LONGTEXT" +
                 ");"
