@@ -69,9 +69,6 @@ public class SweetMessages extends BukkitPlugin {
         } else {
             warn("当前版本不支持显示 BOSS 血条");
         }
-        this.options.registerDatabase(
-                this.messageBroadcastDatabase = new MessageBroadcastDatabase(this)
-        );
     }
 
     @Override
@@ -84,6 +81,9 @@ public class SweetMessages extends BukkitPlugin {
         LanguageManager.inst()
                 .setLangFile("messages.yml")
                 .register(Tips.class, Tips::holder);
+        this.options.registerDatabase(
+                this.messageBroadcastDatabase = new MessageBroadcastDatabase(this)
+        );
     }
 
     @Override
