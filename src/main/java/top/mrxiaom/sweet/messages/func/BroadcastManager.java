@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteArrayDataOutput;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.actions.ActionProviders;
@@ -116,7 +117,7 @@ public class BroadcastManager extends AbstractModule {
         out.writeUTF(type);
     }
 
-    public void broadcastText(Player player, TextArguments arguments) {
+    public void broadcastText(@Nullable Player player, @NotNull TextArguments arguments) {
         byte[] packet = build(out -> {
             initBroadcast(out, "text");
             out.writeBoolean(arguments.papi);
@@ -132,12 +133,14 @@ public class BroadcastManager extends AbstractModule {
                 plugin.getMessageBroadcastDatabase().insert(packet);
                 break;
             case BUNGEE_CORD:
-                player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                if (player != null) {
+                    player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                }
                 break;
         }
     }
 
-    public void broadcastTitle(Player player, TitleArguments arguments) {
+    public void broadcastTitle(@Nullable Player player, @NotNull TitleArguments arguments) {
         byte[] packet = build(out -> {
             initBroadcast(out, "title");
             out.writeBoolean(arguments.papi);
@@ -153,12 +156,14 @@ public class BroadcastManager extends AbstractModule {
                 plugin.getMessageBroadcastDatabase().insert(packet);
                 break;
             case BUNGEE_CORD:
-                player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                if (player != null) {
+                    player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                }
                 break;
         }
     }
 
-    public void broadcastBossBar(Player player, BossBarArguments arguments) {
+    public void broadcastBossBar(@Nullable Player player, @NotNull BossBarArguments arguments) {
         byte[] packet = build(out -> {
             initBroadcast(out, "bossbar");
             out.writeBoolean(arguments.papi);
@@ -174,7 +179,9 @@ public class BroadcastManager extends AbstractModule {
                 plugin.getMessageBroadcastDatabase().insert(packet);
                 break;
             case BUNGEE_CORD:
-                player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                if (player != null) {
+                    player.sendPluginMessage(plugin, "BungeeCord", buildBungee(packet, "Forward", "ALL", "SweetMessages"));
+                }
                 break;
         }
     }
