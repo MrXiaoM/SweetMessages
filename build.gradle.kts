@@ -7,14 +7,13 @@ plugins {
 
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.0")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.1")
 }
 val base = top.mrxiaom.gradle.LibraryHelper(project)
 
 group = "top.mrxiaom.sweet.messages"
 version = "1.0.2"
-val pluginBaseModules = listOf("library", "l10n", "actions", "misc")
-val pluginBaseVersion = "1.7.0"
+val pluginBaseModules = base.modules.run { listOf(library, l10n, actions, misc) }
 val shadowGroup = "top.mrxiaom.sweet.messages.libs"
 
 repositories {
@@ -37,15 +36,17 @@ dependencies {
     compileOnly("org.inventivetalent:bossbarapi:2.4.3-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.0.0")
 
+    base.library("org.slf4j:slf4j-api:2.0.16")
+    base.library("com.zaxxer:HikariCP:4.0.3")
     base.library("net.kyori:adventure-api:4.23.0")
     base.library("net.kyori:adventure-platform-bukkit:4.4.0")
     base.library("net.kyori:adventure-text-minimessage:4.23.0")
     base.library("net.kyori:adventure-text-serializer-plain:4.23.0")
 
     for (artifact in pluginBaseModules) {
-        implementation("top.mrxiaom.pluginbase:$artifact:$pluginBaseVersion")
+        implementation(artifact)
     }
-    implementation("top.mrxiaom:LibrariesResolver-Lite:$pluginBaseVersion")
+    implementation("top.mrxiaom:LibrariesResolver-Lite:${base.modules.VERSION}")
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
     implementation(project(":nms"))
     implementation(project(":nms:shared"))
