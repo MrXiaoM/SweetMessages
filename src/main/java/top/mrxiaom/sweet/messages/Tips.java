@@ -11,6 +11,7 @@ import static top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder.wrap;
 @Language(prefix = "tips.")
 public enum Tips implements IHolderAccessor {
     reload("&a配置文件已重载"),
+    reload_database("&a已重新连接到数据库"),
     help("&b&lSweetMessages 帮助&r",
             "&f/smsgs message <接收者> [选项] <消息> &e发送聊天消息",
             "&f/smsgs actionbar <接收者> [选项] <消息> &e发送 ActionBar 消息",

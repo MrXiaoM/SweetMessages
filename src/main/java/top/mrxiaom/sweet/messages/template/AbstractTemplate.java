@@ -10,7 +10,7 @@ import top.mrxiaom.sweet.messages.commands.args.IArguments;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.commands.receivers.BungeeAllReceivers;
 import top.mrxiaom.sweet.messages.commands.receivers.IReceivers;
-import top.mrxiaom.sweet.messages.func.BungeeBroadcastManager;
+import top.mrxiaom.sweet.messages.func.BroadcastManager;
 
 public abstract class AbstractTemplate {
     private final String id;
@@ -26,7 +26,7 @@ public abstract class AbstractTemplate {
     public void execute(SweetMessages plugin, CommandSender sender, IReceivers receivers) {
         IArguments arguments = arguments();
         if (receivers instanceof BungeeAllReceivers) {
-            BungeeBroadcastManager manager = BungeeBroadcastManager.inst();
+            BroadcastManager manager = BroadcastManager.inst();
             Player whoever = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
             if (whoever == null) {
                 Tips.bungeecord__no_players.tm(sender);

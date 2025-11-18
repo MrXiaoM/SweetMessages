@@ -24,7 +24,7 @@ import top.mrxiaom.sweet.messages.commands.receivers.BukkitReceivers;
 import top.mrxiaom.sweet.messages.commands.receivers.BungeeAllReceivers;
 import top.mrxiaom.sweet.messages.commands.receivers.IReceivers;
 import top.mrxiaom.sweet.messages.func.AbstractModule;
-import top.mrxiaom.sweet.messages.func.BungeeBroadcastManager;
+import top.mrxiaom.sweet.messages.func.BroadcastManager;
 import top.mrxiaom.sweet.messages.func.TemplateManager;
 import top.mrxiaom.sweet.messages.template.AbstractTemplate;
 
@@ -175,7 +175,12 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 execute(sender, receivers, arguments);
                 return true;
             }
-            if (args.length == 1 && "reload".equals(arg0)) {
+            if (args.length >= 1 && "reload".equals(arg0)) {
+                if (args.length == 2 && "database".equalsIgnoreCase(args[1])) {
+                    plugin.options.database().reloadConfig();
+                    plugin.options.database().reconnect();
+                    return Tips.reload_database.tm(sender);
+                }
                 plugin.reloadConfig();
                 return Tips.reload.tm(sender);
             }
@@ -186,7 +191,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
 
     private void execute(CommandSender sender, IReceivers receivers, IArguments arguments) {
         if (receivers instanceof BungeeAllReceivers) {
-            BungeeBroadcastManager manager = BungeeBroadcastManager.inst();
+            BroadcastManager manager = BroadcastManager.inst();
             Player whoever = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
             if (whoever == null) {
                 Tips.bungeecord__no_players.tm(sender);

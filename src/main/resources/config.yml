@@ -10,3 +10,12 @@ title-times:
     fade-in: 0
     stay: 60
     fade-out: 0
+
+# 消息广播设置
+broadcast:
+  # 广播方式
+  # BUNGEE_CORD -- 通过 BungeeCord 消息进行广播，需要服务器内至少有一人在线
+  # DATABASE -- 通过 MySQL 数据库轮询消息进行广播，不需要服务器内有玩家在线，延迟大约1秒
+  method: BUNGEE_CORD
+  # 广播消息组名，在相同组内的子服才能正常接收消息
+  group: global

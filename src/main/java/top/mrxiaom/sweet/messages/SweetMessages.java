@@ -1,11 +1,13 @@
 package top.mrxiaom.sweet.messages;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import top.mrxiaom.pluginbase.resolver.DefaultLibraryResolver;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.messages.api.IBossBarFactory;
 import top.mrxiaom.sweet.messages.bossbar.BukkitBossBarFactory;
+import top.mrxiaom.sweet.messages.database.MessageBroadcastDatabase;
 import top.mrxiaom.sweet.messages.nms.NMS;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.LanguageManager;
@@ -19,11 +21,13 @@ public class SweetMessages extends BukkitPlugin {
         return (SweetMessages) BukkitPlugin.getInstance();
     }
     private IBossBarFactory bossBarFactory;
+    private MessageBroadcastDatabase messageBroadcastDatabase;
+    private String broadcastGroup;
     public SweetMessages() throws Exception {
         super(options()
                 .bungee(true)
                 .adventure(true)
-                .database(false)
+                .database(true)
                 .reconnectDatabaseWhenReloadConfig(false)
                 .scanIgnore("top.mrxiaom.sweet.messages.libs")
         );
@@ -48,6 +52,14 @@ public class SweetMessages extends BukkitPlugin {
         return bossBarFactory;
     }
 
+    public MessageBroadcastDatabase getMessageBroadcastDatabase() {
+        return messageBroadcastDatabase;
+    }
+
+    public String getBroadcastGroup() {
+        return broadcastGroup;
+    }
+
     @Override
     protected void beforeLoad() {
         NMS.init(getLogger());
@@ -57,6 +69,14 @@ public class SweetMessages extends BukkitPlugin {
         } else {
             warn("当前版本不支持显示 BOSS 血条");
         }
+        this.options.registerDatabase(
+                this.messageBroadcastDatabase = new MessageBroadcastDatabase(this)
+        );
+    }
+
+    @Override
+    protected void beforeReloadConfig(FileConfiguration config) {
+        broadcastGroup = config.getString("broadcast.group", "global");
     }
 
     @Override
