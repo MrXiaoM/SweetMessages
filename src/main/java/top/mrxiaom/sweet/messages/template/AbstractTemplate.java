@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.Tips;
+import top.mrxiaom.sweet.messages.api.EnumBroadcastMethod;
 import top.mrxiaom.sweet.messages.commands.args.IArguments;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
 import top.mrxiaom.sweet.messages.commands.receivers.BungeeAllReceivers;
@@ -28,7 +29,7 @@ public abstract class AbstractTemplate {
         if (receivers instanceof BungeeAllReceivers) {
             BroadcastManager manager = BroadcastManager.inst();
             Player whoever = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-            if (whoever == null) {
+            if (whoever == null && manager.getMethod().equals(EnumBroadcastMethod.BUNGEE_CORD)) {
                 Tips.bungeecord__no_players.tm(sender);
                 return;
             }

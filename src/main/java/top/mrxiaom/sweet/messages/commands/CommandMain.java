@@ -16,6 +16,7 @@ import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.sweet.messages.SweetMessages;
 import top.mrxiaom.sweet.messages.Tips;
+import top.mrxiaom.sweet.messages.api.EnumBroadcastMethod;
 import top.mrxiaom.sweet.messages.commands.args.BossBarArguments;
 import top.mrxiaom.sweet.messages.commands.args.IArguments;
 import top.mrxiaom.sweet.messages.commands.args.TextArguments;
@@ -193,7 +194,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         if (receivers instanceof BungeeAllReceivers) {
             BroadcastManager manager = BroadcastManager.inst();
             Player whoever = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-            if (whoever == null) {
+            if (whoever == null && manager.getMethod().equals(EnumBroadcastMethod.BUNGEE_CORD)) {
                 Tips.bungeecord__no_players.tm(sender);
                 return;
             }
