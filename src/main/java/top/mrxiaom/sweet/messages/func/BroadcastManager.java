@@ -110,9 +110,9 @@ public class BroadcastManager extends AbstractModule {
     }
 
     private void initBroadcast(DataOutputStream out, String type) throws IOException {
-        // 设定超时时间，如果3秒内没有接收，就不接收。
+        // 设定超时时间，如果10秒内没有接收，就不接收。
         // 以免很久都没人上过线的子服一有人上线就涌入一堆消息。
-        out.writeLong(System.currentTimeMillis() + 3000);
+        out.writeLong(System.currentTimeMillis() + 10000);
         out.writeUTF(plugin.getBroadcastGroup());
         out.writeUTF(type);
     }
