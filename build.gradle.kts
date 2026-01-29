@@ -46,7 +46,7 @@ dependencies {
     for (artifact in pluginBaseModules) {
         implementation(artifact)
     }
-    implementation("top.mrxiaom:LibrariesResolver-Lite:${base.modules.VERSION}")
+    implementation(base.resolver.lite)
     implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
     implementation(project(":nms"))
     implementation(project(":nms:shared"))
