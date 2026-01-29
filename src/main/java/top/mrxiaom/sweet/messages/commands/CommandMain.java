@@ -118,11 +118,11 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 3 && "template".equals(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return Tips.invalid_selector.tm(sender, args[1]);
+                    return Tips.invalid_selector.tmf(sender, args[1]);
                 }
                 AbstractTemplate template = TemplateManager.inst().get(args[2]);
                 if (template == null) {
-                    return Tips.invalid_template.tm(sender, args[2]);
+                    return Tips.invalid_template.tmf(sender, args[2]);
                 }
                 template.execute(plugin, sender, receivers);
                 return true;
@@ -130,7 +130,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argMessage.contains(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return Tips.invalid_selector.tm(sender, args[1]);
+                    return Tips.invalid_selector.tmf(sender, args[1]);
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
                 if (arguments == null) {
@@ -142,7 +142,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argAction.contains(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return Tips.invalid_selector.tm(sender, args[1]);
+                    return Tips.invalid_selector.tmf(sender, args[1]);
                 }
                 TextArguments arguments = parse(TextArguments::parser, args, 2);
                 if (arguments == null) {
@@ -155,7 +155,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argTitle.contains(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return Tips.invalid_selector.tm(sender, args[1]);
+                    return Tips.invalid_selector.tmf(sender, args[1]);
                 }
                 TitleArguments arguments = parse(TitleArguments::parser, args, 2);
                 if (arguments == null) {
@@ -167,7 +167,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             if (args.length >= 2 && argBossBar.contains(arg0)) {
                 IReceivers receivers = parseReceivers(sender, args[1]);
                 if (receivers == null) {
-                    return Tips.invalid_selector.tm(sender, args[1]);
+                    return Tips.invalid_selector.tmf(sender, args[1]);
                 }
                 BossBarArguments arguments = parse(BossBarArguments::parser, args, 2);
                 if (arguments == null) {
