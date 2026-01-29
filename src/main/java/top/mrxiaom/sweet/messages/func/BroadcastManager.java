@@ -33,6 +33,7 @@ public class BroadcastManager extends AbstractModule {
     private EnumBroadcastMethod method;
     public BroadcastManager(SweetMessages plugin) {
         super(plugin);
+        registerBungee();
     }
 
     @Override
