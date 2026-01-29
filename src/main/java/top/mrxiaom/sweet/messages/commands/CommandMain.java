@@ -53,6 +53,9 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
         if (s.equals("@bc") || s.equals("@bungeecord") || s.equals("@broadcast")) {
             return BungeeAllReceivers.INSTANCE;
         }
+        if (s.equals("@bci")) {
+            return BungeeAllReceivers.ONLY_BROADCAST;
+        }
         if (s.equals("@a") || s.equals("@all") || s.equals("@e")) { // 所有在线玩家
             List<CommandSender> receivers = new ArrayList<>();
             receivers.add(Bukkit.getConsoleSender()); // 为了后台也能收到，把它也加进去，留个底
@@ -198,18 +201,19 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
                 Tips.bungeecord__no_players.tm(sender);
                 return;
             }
+            boolean ignoreCurrentServer = ((BungeeAllReceivers) receivers).isIgnoreCurrentServer();
             if (arguments instanceof TextArguments) {
-                arguments.execute(plugin, receivers.getList());
+                if (!ignoreCurrentServer) arguments.execute(plugin, receivers.getList());
                 manager.broadcastText(whoever, (TextArguments) arguments);
                 return;
             }
             if (arguments instanceof TitleArguments) {
-                arguments.execute(plugin, receivers.getList());
+                if (!ignoreCurrentServer) arguments.execute(plugin, receivers.getList());
                 manager.broadcastTitle(whoever, (TitleArguments) arguments);
                 return;
             }
             if (arguments instanceof BossBarArguments) {
-                arguments.execute(plugin, receivers.getList());
+                if (!ignoreCurrentServer) arguments.execute(plugin, receivers.getList());
                 manager.broadcastBossBar(whoever, (BossBarArguments) arguments);
                 return;
             }
@@ -221,7 +225,7 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
 
     private static final List<String> emptyList = Lists.newArrayList();
     private static final List<String> listOpArg0 = new ArrayList<>();
-    private static final List<String> listTargetArg1 = Lists.newArrayList("@bc", "@a", "@e", "@s", "@p", "@r");
+    private static final List<String> listTargetArg1 = Lists.newArrayList("@bc", "@bci", "@a", "@e", "@s", "@p", "@r");
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {

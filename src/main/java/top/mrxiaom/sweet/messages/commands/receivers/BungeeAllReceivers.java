@@ -7,8 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BungeeAllReceivers implements IReceivers {
-    public static final BungeeAllReceivers INSTANCE = new BungeeAllReceivers();
-    private BungeeAllReceivers() {}
+    public static final BungeeAllReceivers INSTANCE = new BungeeAllReceivers(false);
+    public static final BungeeAllReceivers ONLY_BROADCAST = new BungeeAllReceivers(true);
+    private final boolean ignoreCurrentServer;
+    private BungeeAllReceivers(boolean ignoreCurrentServer) {
+        this.ignoreCurrentServer = ignoreCurrentServer;
+    }
+
+    public boolean isIgnoreCurrentServer() {
+        return ignoreCurrentServer;
+    }
 
     @Override
     public List<CommandSender> getList() {

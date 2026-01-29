@@ -57,6 +57,7 @@ public class BroadcastManager extends AbstractModule {
         String group = in.readUTF();
         if (!group.equals(plugin.getBroadcastGroup())) return;
         String type = in.readUTF();
+        BungeeAllReceivers receivers = BungeeAllReceivers.INSTANCE;
         switch (type) {
             case "text": {
                 boolean papi = in.readBoolean();
@@ -69,7 +70,7 @@ public class BroadcastManager extends AbstractModule {
                 }
                 TextArguments arguments = new TextArguments(papi, delay, lines);
                 arguments.isActionMessage = isActionMessage;
-                arguments.execute(plugin, BungeeAllReceivers.INSTANCE.getList());
+                arguments.execute(plugin, receivers.getList());
                 return;
             }
             case "title": {
@@ -81,7 +82,7 @@ public class BroadcastManager extends AbstractModule {
                 String title = in.readUTF();
                 String subTitle = in.readUTF();
                 TitleArguments arguments = new TitleArguments(papi, delay, fadeIn, stay, fadeOut, title, subTitle);
-                arguments.execute(plugin, BungeeAllReceivers.INSTANCE.getList());
+                arguments.execute(plugin, receivers.getList());
                 return;
             }
             case "bossbar": {
@@ -102,7 +103,7 @@ public class BroadcastManager extends AbstractModule {
                     postActionsStr = null;
                 }
                 BossBarArguments arguments = new BossBarArguments(papi, delay, duration, color, style, title, postActions, postActionsStr);
-                arguments.execute(plugin, BungeeAllReceivers.INSTANCE.getList());
+                arguments.execute(plugin, receivers.getList());
                 return;
             }
         }
