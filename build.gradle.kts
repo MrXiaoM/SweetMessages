@@ -7,7 +7,7 @@ plugins {
 
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.5")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.11")
 }
 val base = top.mrxiaom.gradle.LibraryHelper(project)
 
@@ -68,6 +68,10 @@ buildConfig {
 }
 
 setupJava(8)
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 tasks {
     shadowJar {
         configurations.add(shadowLink)
@@ -94,14 +98,32 @@ tasks {
             include("plugin.yml")
         }
     }
+    javadoc {
+        (options as? StandardJavadocDocletOptions)?.apply {
+            locale("zh_CN")
+            charset("UTF-8")
+            encoding("UTF-8")
+            docEncoding("UTF-8")
+            addBooleanOption("keywords", true)
+            addBooleanOption("Xdoclint:none", true)
+
+            val currentJavaVersion = JavaVersion.current()
+            if (currentJavaVersion > JavaVersion.VERSION_1_9) {
+                addBooleanOption("html5", true)
+            }
+        }
+    }
 }
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            from(components.getByName("java"))
             groupId = project.group.toString()
             artifactId = rootProject.name
             version = project.version.toString()
+
+            artifact(tasks["shadowJar"]).classifier = null
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
         }
     }
 }
