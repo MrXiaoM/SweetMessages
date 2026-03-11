@@ -36,23 +36,29 @@ public class MessageBroadcastDatabase extends AbstractPluginHolder implements ID
     @Override
     public void reload(Connection conn, String tablePrefix) throws SQLException {
         TABLE_NAME = tablePrefix + "broadcast";
-        try (PreparedStatement ps = conn.prepareStatement(
-                "CREATE TABLE if NOT EXISTS `" + TABLE_NAME + "`(" +
-                        "`sequence` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                        "`uuid` VARCHAR(64)," +
-                        "`message` LONGTEXT" +
-                ");"
-        )) {
-            ps.execute();
-        }
-        Integer lastSequence = getLastSequence(conn);
-        if (lastSequence != null) {
-            this.lastSequence = lastSequence;
-        }
         if (pollTask != null) {
             pollTask.cancel();
+            pollTask = null;
         }
-        pollTask = plugin.getScheduler().runTaskTimerAsync(this::poll, 20L, 20L);
+        if (plugin.options.database().isMySQL()) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "CREATE TABLE if NOT EXISTS `" + TABLE_NAME + "`(" +
+                            "`sequence` INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                            "`uuid` VARCHAR(64)," +
+                            "`message` LONGTEXT" +
+                            ");"
+            )) {
+                ps.execute();
+            }
+            Integer lastSequence = getLastSequence(conn);
+            if (lastSequence != null) {
+                this.lastSequence = lastSequence;
+            }
+            if (pollTask != null) {
+                pollTask.cancel();
+            }
+            pollTask = plugin.getScheduler().runTaskTimerAsync(this::poll, 20L, 20L);
+        }
     }
 
     @Nullable
