@@ -44,7 +44,7 @@ public class NMS {
         } catch (Throwable e) {
             String ver = Bukkit.getServer().getBukkitVersion().split("-")[0];
             logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
-            nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, "unknown");
+            nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, ver.replace(".", "_"));
         }
         try {
             Class<?> classLivingEntity = Class.forName("top.mrxiaom.sweet.messages.nms.BossBar_" + nmsVersion);

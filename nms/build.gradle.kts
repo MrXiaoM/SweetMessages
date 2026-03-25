@@ -1,6 +1,9 @@
 
 allprojects {
     apply(plugin="java")
+    extensions.configure<JavaPluginExtension> {
+        disableAutoTargetJvm()
+    }
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
