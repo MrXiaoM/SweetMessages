@@ -1,7 +1,7 @@
 package top.mrxiaom.sweet.messages.utils;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 public class Utils {
     private static final LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();

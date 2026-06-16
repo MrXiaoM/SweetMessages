@@ -1,3 +1,5 @@
+import top.mrxiaom.gradle.LibraryHelper
+
 plugins {
     java
     `maven-publish`
@@ -7,9 +9,9 @@ plugins {
 
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.12")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.24")
 }
-val base = top.mrxiaom.gradle.LibraryHelper(project)
+val base = LibraryHelper(project)
 
 group = "top.mrxiaom.sweet.messages"
 version = "1.0.4"
@@ -32,16 +34,14 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     // compileOnly("org.spigotmc:spigot:1.20") // NMS
 
-    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("org.inventivetalent:bossbarapi:2.4.3-SNAPSHOT")
-    compileOnly("org.jetbrains:annotations:24.0.0")
+    compileOnly(base.depend.annotations)
 
     base.library("org.slf4j:slf4j-api:2.0.16")
     base.library("com.zaxxer:HikariCP:4.0.3")
-    base.library("net.kyori:adventure-api:4.23.0")
-    base.library("net.kyori:adventure-platform-bukkit:4.4.0")
-    base.library("net.kyori:adventure-text-minimessage:4.23.0")
-    base.library("net.kyori:adventure-text-serializer-plain:4.23.0")
+    base.library(LibraryHelper.adventure("4.25.0"))
+    base.collectPluginHolders()
 
     for (artifact in pluginBaseModules) {
         implementation(artifact)
@@ -68,11 +68,10 @@ buildConfig {
 }
 
 setupJava(8)
-java {
-    disableAutoTargetJvm()
-    withSourcesJar()
-    withJavadocJar()
-}
+
+LibraryHelper.initJava(project, base, 8, true)
+LibraryHelper.initPublishing(project)
+
 tasks {
     shadowJar {
         configurations.add(project.configurations.runtimeClasspath.get())
@@ -82,50 +81,6 @@ tasks {
             "com.tcoded.folialib" to "folialib",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
-        }
-    }
-    val copyTask = create<Copy>("copyBuildArtifact") {
-        dependsOn(shadowJar)
-        from(shadowJar.get().outputs)
-        rename { "${project.name}-$version.jar" }
-        into(rootProject.file("out"))
-    }
-    build {
-        dependsOn(copyTask)
-    }
-    processResources {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from(sourceSets.main.get().resources.srcDirs) {
-            expand(mapOf("version" to version))
-            include("plugin.yml")
-        }
-    }
-    javadoc {
-        (options as? StandardJavadocDocletOptions)?.apply {
-            locale("zh_CN")
-            charset("UTF-8")
-            encoding("UTF-8")
-            docEncoding("UTF-8")
-            addBooleanOption("keywords", true)
-            addBooleanOption("Xdoclint:none", true)
-
-            val currentJavaVersion = JavaVersion.current()
-            if (currentJavaVersion > JavaVersion.VERSION_1_9) {
-                addBooleanOption("html5", true)
-            }
-        }
-    }
-}
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = project.group.toString()
-            artifactId = rootProject.name
-            version = project.version.toString()
-
-            artifact(tasks["shadowJar"]).classifier = null
-            artifact(tasks["sourcesJar"])
-            artifact(tasks["javadocJar"])
         }
     }
 }
