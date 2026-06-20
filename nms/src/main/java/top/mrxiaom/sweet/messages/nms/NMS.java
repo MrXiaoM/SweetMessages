@@ -32,6 +32,23 @@ public class NMS {
         put("1.21.11", "v1_21_R7");
     }};
 
+    private static String tryLoadNMS(String nmsVersion) {
+        try {
+            Class<?> classLivingEntity = Class.forName("top.mrxiaom.sweet.messages.nms.BossBar_" + nmsVersion);
+            bossBar = (IBossBar) classLivingEntity.getConstructor().newInstance();
+            loaded = true;
+        } catch (Throwable ignored) {
+            String[] split = nmsVersion.split("_", 3);
+            if (split.length == 3) {
+                String rootVersion = split[0] + "_" + split[1];
+                if (!rootVersion.equals(nmsVersion)) {
+                    return tryLoadNMS(rootVersion);
+                }
+            }
+        }
+        return nmsVersion;
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     public static boolean init(Logger logger) {
         if (loaded) return true;
@@ -46,12 +63,7 @@ public class NMS {
             logger.info("Found Minecraft: " + ver + "! Trying to find NMS support");
             nmsVersion = VERSION_TO_REVISION.getOrDefault(ver, ver.replace(".", "_"));
         }
-        try {
-            Class<?> classLivingEntity = Class.forName("top.mrxiaom.sweet.messages.nms.BossBar_" + nmsVersion);
-            bossBar = (IBossBar) classLivingEntity.getConstructor().newInstance();
-            loaded = true;
-        } catch (Throwable ignored) {
-        }
+        nmsVersion = tryLoadNMS(nmsVersion);
 
         if (loaded) {
             logger.info("NMS support '" + nmsVersion + "' loaded!");
