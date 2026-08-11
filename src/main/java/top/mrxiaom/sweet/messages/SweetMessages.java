@@ -6,7 +6,6 @@ import top.mrxiaom.pluginbase.resolver.DefaultLibraryResolver;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Util;
-import top.mrxiaom.pluginbase.utils.scheduler.FoliaLibScheduler;
 import top.mrxiaom.sweet.messages.api.IBossBarFactory;
 import top.mrxiaom.sweet.messages.bossbar.BukkitBossBarFactory;
 import top.mrxiaom.sweet.messages.database.MessageBroadcastDatabase;
