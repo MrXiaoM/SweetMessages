@@ -9,7 +9,7 @@ plugins {
 
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.32")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.34")
 }
 val base = LibraryHelper(project)
 
@@ -47,7 +47,6 @@ dependencies {
         implementation(artifact)
     }
     implementation(base.resolver.lite)
-    implementation("com.github.technicallycoded:FoliaLib:0.4.4") { isTransitive = false }
     implementation(project(":nms"))
     implementation(project(":nms:shared"))
     for (proj in project.project(":nms").subprojects) {
@@ -78,7 +77,6 @@ tasks {
         configurations.add(shadowLink)
         mapOf(
             "top.mrxiaom.pluginbase" to "base",
-            "com.tcoded.folialib" to "folialib",
         ).forEach { (original, target) ->
             relocate(original, "$shadowGroup.$target")
         }
