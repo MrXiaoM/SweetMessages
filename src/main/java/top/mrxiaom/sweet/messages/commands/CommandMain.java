@@ -62,6 +62,10 @@ public class CommandMain extends AbstractModule implements CommandExecutor, TabC
             receivers.addAll(Bukkit.getOnlinePlayers());
             return new BukkitReceivers(receivers);
         }
+        if (s.equals("@a!console") || s.equals("@all!console") || s.equals("@e!console")) {
+            List<CommandSender> receivers = new ArrayList<>(Bukkit.getOnlinePlayers());
+            return new BukkitReceivers(receivers);
+        }
         if (s.equals("@c") || s.equals("@console")) {
             return new BukkitReceivers(Bukkit.getConsoleSender());
         }
