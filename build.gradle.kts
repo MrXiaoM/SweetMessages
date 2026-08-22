@@ -9,13 +9,13 @@ plugins {
 
 buildscript {
     repositories.mavenCentral()
-    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.7.34")
+    dependencies.classpath("top.mrxiaom:LibrariesResolver-Gradle:1.8.0")
 }
 val base = LibraryHelper(project)
 
 group = "top.mrxiaom.sweet.messages"
 version = "1.0.7"
-val pluginBaseModules = base.modules.run { listOf(library, l10n, actions, misc) }
+val pluginBaseModules = base.modules.run { listOf(library, message, l10n, actions, misc) }
 val shadowGroup = "top.mrxiaom.sweet.messages.libs"
 
 repositories {
